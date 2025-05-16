@@ -11,7 +11,6 @@ import Login from './Components/Login';
 import "./App.css"
 
 import Register from './Components/Register';
-import WrappedRegister from './Components/WrppedRegister';
 
 
 function App() {
@@ -28,7 +27,7 @@ function App() {
       <Route path='/shop' element={<Products/>}/>
       <Route path='/admin' element={<AdminProducts/>}/>
       <Route path='/login' element={<Login/>}/>
-      <Route path='/register' element={<WrappedRegister/>}/>
+      <Route path='/register' element={<Register/>}/>
      </Routes>
 
       {/* Featured Products */}
