@@ -11,7 +11,7 @@
   top: 0; left: 0; right: 0;
   height: 80px;
   padding: 0 2rem;
-  background: var(--secondary-color);
+  background: #305e5e;
   display: flex;
   align-items: center;
   justify-content: space-between;
