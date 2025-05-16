@@ -1,0 +1,138 @@
+/* App.css – Organic Products Theme */
+
+/* Color Palette */
+:root {
+  --primary-color: #2F4F4F;       /* Dark Slate Gray (Navbar/Footer) */
+  --secondary-color: #FFFFFF;     /* White */
+  --accent-color: #8FBC8F;        /* Dark Sea Green (Buttons, Highlights) */
+  --accent-dark: #556B2F;         /* Dark Olive Green (Marquee BG) */
+  --bg-light: #F5F5F0;            /* Soft Off-White (Page Background) */
+  --text-color: #333333;          /* Dark Gray (Body Text) */
+}
+
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+}
+
+/* BODY */
+body {  overflow-x: hidden;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+
+
+
+/* MARQUEE */
+.marquee-container {
+  width: 100%;
+  background-color: var(--accent-dark);
+  padding: 1rem 0;
+}
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.marquee p {
+  display: inline-block;
+  color: var(--secondary-color);
+  font-size: 1rem;
+  /* padding-left: 10%; */
+  animation: marquee 15s linear infinite;
+}
+@keyframes marquee {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+/* FEATURED PRODUCTS */
+.products {
+  width: 100vw;
+  padding: 4rem 2rem;
+  background-color: var(--bg-light);
+}
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--accent-dark);
+}
+.product-list {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+}
+.product-card {
+  background-color: var(--secondary-color);
+  flex: 0 0 calc(25% - 1.5rem);
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  text-align: center;
+  transition: transform 0.3s;
+}
+.product-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.product-card h3 {
+  font-size: 1.25rem;
+  margin: 1rem 0 0.5rem;
+  color: var(--accent-dark);
+}
+.product-card p {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+.product-card .price {
+  font-weight: bold;
+  color: var(--accent-color);
+}
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+/* FOOTER */
+.footer {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  text-align: center;
+  padding: 2rem 1rem;
+}
+.footer p {
+  font-size: 0.875rem;
+}
+
+/* RESPONSIVE BREAKPOINTS */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+  .hero-subtitle {
+    font-size: 1.125rem;
+  }
+  .product-card {
+    flex: 0 0 calc(50% - 1rem);
+  }
+  .navbar .menu {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-card {
+    flex: 0 0 100%;
+  }
+}

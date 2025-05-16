@@ -1,0 +1,84 @@
+/* Page background and centering */
+.login {
+    background: #000;
+    height: 88vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Login/Register container */
+  .auth-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 30px 25px;
+    border-radius: 10px;
+    background: #f9f9f9;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Form layout */
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .auth-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Input labels */
+  .auth-form label {
+    margin-top: 12px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  /* Inputs */
+  .auth-form input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: border 0.3s;
+  }
+  
+  .auth-form input:focus {
+    border-color: #4caf50;
+  }
+  
+  /* Button */
+  .auth-form button {
+    margin-top: 20px;
+    padding: 12px;
+    background-color: #4caf50;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .auth-form button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Footer link (e.g. for Register) */
+  .auth-form p {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .auth-form p span {
+    color: #4caf50;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
