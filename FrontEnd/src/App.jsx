@@ -8,7 +8,7 @@ import { Route, Routes } from 'react-router-dom';
 import Home from './Components/Home';
 import Contact from './Components/Contact';
 import Login from './Components/Login';
-
+import "./App.css"
 
 import Register from './Components/Register';
 import WrappedRegister from './Components/WrppedRegister';
