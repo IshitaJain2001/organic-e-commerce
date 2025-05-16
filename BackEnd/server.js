@@ -5,7 +5,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
-
+const session = require("express-session");
 
 const app = express();
 
@@ -17,7 +17,14 @@ mongoose
 
   app.use(cors());
 app.use(express.json());
-
+app.use(
+  session({
+    secret: 'your_secret_key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Set to true only if using HTTPS
+  })
+);
 const productsSchema = new mongoose.Schema({
   name: { type: String, required: true },
   price: { type: Number, required: true },
@@ -89,38 +96,57 @@ app.put("/update-product/:id", verifyToken, isAdmin, async (req, res) => {
     res.status(500).json({ error: "Update error" });
   }
 });
+// Function to generate a 6-digit OTP
+function generateOtp() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+const sendSMS = async (phone, otp) => {
+  try {
+    const response = await axios.post(
+      "https://www.fast2sms.com/dev/bulkV2",
+      {
+        route: "otp",
+        sender_id: "FSTSMS",  // required by Fast2SMS
+        variables_values: otp,
+        flash: 0,
+        numbers: phone,
+      },
+      {
+        headers: {
+          authorization: process.env.FAST2SMS_API_KEY,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log("SMS sent successfully:", response.data);
+  } catch (error) {
+    // This will show the exact API error message if available
+    console.error("Error sending SMS:", error.response?.data || error.message);
+    throw error;
+  }
+};
 
 app.post("/send-otp", async (req, res) => {
-  const { phoneNumber } = req.body;
-  try {
-    const otp = Math.floor(100000 + Math.random() * 900000); // Generate a random 6-digit OTP
+  console.log("Request received at /send-otp"); // <--- yeh zaroori hai
+  const phoneNumber = req.body.phoneNumber;
 
-    // Send OTP via Fast2SMS (you can replace with any SMS API)
-    const response = await axios.post("https://www.fast2sms.com/dev/bulk", null, {
-      params: {
-        sender_id: "FSTSMS",
-        message: `Your OTP is ${otp}`,
-        language: "english",
-        route: "p",
-        numbers: phoneNumber,
-      },
-      headers: {
-        authorization: process.env.FAST2SMS_API_KEY,
-          'Content-Type': 'application/x-www-form-urlencoded'
-      },
-    });
-
-    // In a real-world app, store OTP in a secure location (e.g., Redis) for validation
-    // For simplicity, we will store OTP temporarily in-memory (this should be improved)
-    req.session.otp = otp;
-console.log(response.data);
-
-    res.status(200).json({ message: "OTP sent successfully" });
-  } catch (error) {
-    console.log("Error sending OTP:", error);
-    res.status(500).json({ message: "Failed to send OTP" });
+  if (!phoneNumber) {
+    console.log("Phone number not provided");
+    return res.status(400).json({ error: "Phone number is required" });
   }
+
+  const otp = generateOtp(); // assume yeh function OTP bana raha hai
+  console.log("Generated OTP:", otp);
+
+  // OTP ko session mein save karo
+  req.session.otp = otp;
+  req.session.phone = phoneNumber;
+  console.log("Session after OTP save:", req.session);
+  await sendSMS(phoneNumber, otp);
+  // Send fake response (ya Twilio ka code ho)
+  res.json({ message: "OTP sent successfully", otp }); // development mein OTP dikhana okay hai
 });
+
 
 // Verify OTP and Register the user
 app.post("/verify-otp", async (req, res) => {
