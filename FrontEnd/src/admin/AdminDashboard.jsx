@@ -18,7 +18,7 @@ export default function AdminDashboard() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch("http://localhost:3000/check-products");
+      const res = await fetch("https://organic-e-commerce.onrender.com/check-products");
       const data = await res.json();
       setProductList(data.products);
     } catch (err) {
@@ -37,8 +37,8 @@ export default function AdminDashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = isEditMode
-      ? `http://localhost:3000/update-product/${editId}`
-      : "http://localhost:3000/add-products";
+      ? `https://organic-e-commerce.onrender.com/update-product/${editId}`
+      : "https://organic-e-commerce.onrender.com/add-products";
 
     const method = isEditMode ? "PUT" : "POST";
     const token = localStorage.getItem("token");
@@ -67,7 +67,7 @@ export default function AdminDashboard() {
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`http://localhost:3000/delete-product/${id}`, {
+      await fetch(`https://organic-e-commerce.onrender.com/delete-product/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
       });

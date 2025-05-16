@@ -7,7 +7,7 @@ export default function Products() {
   useEffect(() => {
     async function getData() {
       try {
-        let data = await fetch("http://localhost:3000/check-products");
+        let data = await fetch("https://organic-e-commerce.onrender.com/check-products");
         let res = await data.json();
         setProducts(res);
       } catch (err) {
