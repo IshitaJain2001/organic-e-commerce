@@ -3,6 +3,9 @@ import './Contact.css';
 
 const Contact = () => {
   return (
+    <div className="flex">
+
+    
     <div className="contact-container">
       <h2>Contact Us</h2>
       <form className="contact-form">
@@ -17,6 +20,7 @@ const Contact = () => {
 
         <button type="submit">Send Message</button>
       </form>
+    </div>
     </div>
   );
 };

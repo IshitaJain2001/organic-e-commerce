@@ -1,6 +1,17 @@
+.flex{
+    display: flex;
+    height: 88vh;
+    /* width: 100vw; */
+    justify-content: center;
+    align-items: center;
+    
+}
+
 .contact-container {
-  max-width: 600px;
-  margin: 40px auto;
+      width: 60%;
+  margin-top: 80px;
+  max-width: 800px;
+  /* margin: 150px auto; */
   padding: 30px;
   background-color: #f5fff4;
   border-radius: 12px;
