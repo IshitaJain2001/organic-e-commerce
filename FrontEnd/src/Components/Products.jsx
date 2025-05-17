@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
-import "./Products.css"; // ✅ Import the CSS file
+import "./Products.css";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../cartActions";
 
 export default function Products() {
   const [products, setProducts] = useState({ products: [] });
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function getData() {
@@ -18,12 +21,65 @@ export default function Products() {
     getData();
   }, []);
 
+  
+
+//   const handleAddToCart = async(productIndex) => {
+//   const updatedProducts = [...products.products];
+
+
+//   if (updatedProducts[productIndex].productCount > 0) {
+   
+//     updatedProducts[productIndex].productCount -= 1;
+
+
+//     setProducts({ products: updatedProducts });
+
+
+//     dispatch(addToCart(updatedProducts[productIndex]));
+
+//     alert("Product added to cart!");
+//      await fetch('http://localhost:5000/update-stock', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({ productId: product._id, quantity: 1 }),
+//   });
+//   } else {
+//     alert("Out of stock!");
+//   }
+// };
+
+const handleAddToCart = async (productIndex) => {
+  const updatedProducts = [...products.products];
+  const selectedProduct = updatedProducts[productIndex]; // ✅ define this
+
+  if (selectedProduct.productCount > 0) {
+    selectedProduct.productCount -= 1;
+    setProducts({ products: updatedProducts });
+
+    dispatch(addToCart(selectedProduct));
+
+    alert("Product added to cart!");
+
+    await fetch("https://organic-e-commerce.onrender.com/update-stock", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ productId: selectedProduct._id, quantity: 1 }), // ✅ fixed
+    });
+  } else {
+    alert("Out of stock!");
+  }
+};
+
+
   let productList = products.products || [];
 
   return (
     <section className="products-section">
       <h2 className="section-title">Featured Products</h2>
-
       <div className="product-list">
         {productList.length > 0 ? (
           productList.map((product, index) => (
@@ -31,6 +87,10 @@ export default function Products() {
               <h3>{product.name}</h3>
               <p className="price">₹{product.price}</p>
               <p className="stock">In Stock: {product.productCount}</p>
+<button onClick={() => handleAddToCart(index)} className="add-to-cart-btn">
+
+                Add to Cart
+              </button>
             </div>
           ))
         ) : (

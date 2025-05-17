@@ -202,6 +202,50 @@ app.post("/login", async (req, res) => {
   }
 });
 
+
+app.post('/update-stock', async (req, res) => {
+  const { productId, quantity } = req.body;
+
+  try {
+    const product = await Product.findById(productId);
+    if (!product) return res.status(404).json({ message: "Product not found" });
+
+    if (product.productCount < quantity) {
+      return res.status(400).json({ message: "Not enough stock" });
+    }
+
+    product.productCount -= quantity;
+    await product.save();
+
+    res.status(200).json({ message: "Stock updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+// app.post('/update-stock', async (req, res) => {
+//   const { productId, quantity } = req.body;
+
+//   try {
+//     const product = await Product.findById(productId);
+//     if (!product) return res.status(404).json({ message: "Product not found" });
+
+//     if (product.stock < quantity) {
+//       return res.status(400).json({ message: "Not enough stock" });
+//     }
+
+//     product.stock -= quantity;
+//     await product.save();
+
+//     res.status(200).json({ message: "Stock updated" });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
+
 // Server Listen
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

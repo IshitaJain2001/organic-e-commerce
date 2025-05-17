@@ -11,6 +11,7 @@ import Login from './Components/Login';
 import "./App.css"
 
 import Register from './Components/Register';
+import Cart from './Components/Cart';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
       <Route path='/contact' element={<Contact/>}/>
       <Route path='/shop' element={<Products/>}/>
       <Route path='/admin' element={<AdminProducts/>}/>
+      <Route path='/cart' element={<Cart/>}/>
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>
      </Routes>
