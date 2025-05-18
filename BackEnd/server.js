@@ -240,7 +240,7 @@ app.post('/update-stock', async (req, res) => {
 });
 
 // Add product to cart
-app.post("/cart", verifyToken, async (req, res) => {
+app.post("/cart", async (req, res) => {
   const { productId, quantity } = req.body;
 
   try {
@@ -269,7 +269,7 @@ app.post("/cart", verifyToken, async (req, res) => {
   }
 });
 
-app.get("/cart", verifyToken, async (req, res) => {
+app.get("/cart",  async (req, res) => {
   try {
     const cart = await Cart.findOne({ user: req.user.id }).populate('items.productId');
     if (!cart) return res.status(404).json({ message: "Cart is empty" });
@@ -280,7 +280,7 @@ app.get("/cart", verifyToken, async (req, res) => {
   }
 });
 
-app.delete("/remove-from-cart/:productId", verifyToken, async (req, res) => {
+app.delete("/remove-from-cart/:productId",  async (req, res) => {
   const { productId } = req.params;
   try {
     const cart = await Cart.findOne({ user: req.user.id });
@@ -301,7 +301,7 @@ app.delete("/remove-from-cart/:productId", verifyToken, async (req, res) => {
 });
 
 
-app.put("/update-cart/:productId", verifyToken, async (req, res) => {
+app.put("/update-cart/:productId", async (req, res) => {
   const { productId } = req.params;
   const { quantity } = req.body;
 
