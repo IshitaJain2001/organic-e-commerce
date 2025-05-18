@@ -42,6 +42,21 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model("User", userSchema);
 
+const cartSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
+  items: [
+    {
+      productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+      name: { type: String, required: true },
+      price: { type: Number, required: true },
+      quantity: { type: Number, required: true, default: 1 }
+    }
+  ]
+}, {
+  timestamps: true // For tracking cart creation and updates
+});
+
+const Cart = mongoose.model('Cart', cartSchema);
 
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -224,29 +239,96 @@ app.post('/update-stock', async (req, res) => {
   }
 });
 
+// Add product to cart
+app.post("/cart", verifyToken, async (req, res) => {
+  const { productId, quantity } = req.body;
 
-// app.post('/update-stock', async (req, res) => {
-//   const { productId, quantity } = req.body;
+  try {
+    const product = await Product.findById(productId);
+    if (!product) return res.status(404).json({ message: "Product not found" });
 
-//   try {
-//     const product = await Product.findById(productId);
-//     if (!product) return res.status(404).json({ message: "Product not found" });
+    let cart = await Cart.findOne({ user: req.user.id });
 
-//     if (product.stock < quantity) {
-//       return res.status(400).json({ message: "Not enough stock" });
-//     }
+    if (!cart) {
+      // Create a new cart if not exist
+      cart = new Cart({ user: req.user.id, items: [{ productId, quantity }] });
+    } else {
+      // Update cart if the product already exists in the cart
+      const productInCart = cart.items.find(item => item.productId.toString() === productId);
+      if (productInCart) {
+        productInCart.quantity += quantity;
+      } else {
+        cart.items.push({ productId, quantity });
+      }
+    }
 
-//     product.stock -= quantity;
-//     await product.save();
+    await cart.save();
+    res.status(200).json({ message: "Product added to cart", cart });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
-//     res.status(200).json({ message: "Stock updated" });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// });
+app.get("/cart", verifyToken, async (req, res) => {
+  try {
+    const cart = await Cart.findOne({ user: req.user.id }).populate('items.productId');
+    if (!cart) return res.status(404).json({ message: "Cart is empty" });
 
-// Server Listen
+    res.status(200).json(cart.items);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.delete("/remove-from-cart/:productId", verifyToken, async (req, res) => {
+  const { productId } = req.params;
+  try {
+    const cart = await Cart.findOne({ user: req.user.id });
+
+    if (!cart || cart.items.length === 0) {
+      return res.status(404).json({ message: "Cart is empty" });
+    }
+
+    // Remove item from the cart
+    cart.items = cart.items.filter(item => item.productId.toString() !== productId);
+    await cart.save();
+
+    res.status(200).json({ message: "Item removed from cart", cart });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error removing item from cart" });
+  }
+});
+
+
+app.put("/update-cart/:productId", verifyToken, async (req, res) => {
+  const { productId } = req.params;
+  const { quantity } = req.body;
+
+  try {
+    const cart = await Cart.findOne({ user: req.user.id });
+
+    if (!cart || cart.items.length === 0) {
+      return res.status(404).json({ message: "Cart is empty" });
+    }
+
+    const itemIndex = cart.items.findIndex(item => item.productId.toString() === productId);
+
+    if (itemIndex < 0) {
+      return res.status(404).json({ message: "Item not found in cart" });
+    }
+
+    // Update the quantity
+    cart.items[itemIndex].quantity = quantity;
+    await cart.save();
+
+    res.status(200).json({ message: "Cart updated successfully", cart });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error updating cart" });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

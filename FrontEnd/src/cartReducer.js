@@ -26,3 +26,10 @@ export const cartReducer = (state = initialState, action) => {
       return state;
   }
 };
+
+export const addToCart = (product) => {
+  return {
+    type: 'ADD_TO_CART',
+    payload: product,
+  };
+};

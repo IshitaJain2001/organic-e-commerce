@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import "./Products.css";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../cartActions";
+import "./Products.css";
 
 export default function Products() {
   const [products, setProducts] = useState({ products: [] });
@@ -21,59 +21,29 @@ export default function Products() {
     getData();
   }, []);
 
-  
+  const handleAddToCart = async (productIndex) => {
+    const updatedProducts = [...products.products];
+    const selectedProduct = updatedProducts[productIndex];
 
-//   const handleAddToCart = async(productIndex) => {
-//   const updatedProducts = [...products.products];
+    if (selectedProduct.productCount > 0) {
+      selectedProduct.productCount -= 1;
+      setProducts({ products: updatedProducts });
 
+      dispatch(addToCart(selectedProduct));
 
-//   if (updatedProducts[productIndex].productCount > 0) {
-   
-//     updatedProducts[productIndex].productCount -= 1;
+      alert("Product added to cart!");
 
-
-//     setProducts({ products: updatedProducts });
-
-
-//     dispatch(addToCart(updatedProducts[productIndex]));
-
-//     alert("Product added to cart!");
-//      await fetch('http://localhost:5000/update-stock', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({ productId: product._id, quantity: 1 }),
-//   });
-//   } else {
-//     alert("Out of stock!");
-//   }
-// };
-
-const handleAddToCart = async (productIndex) => {
-  const updatedProducts = [...products.products];
-  const selectedProduct = updatedProducts[productIndex]; // ✅ define this
-
-  if (selectedProduct.productCount > 0) {
-    selectedProduct.productCount -= 1;
-    setProducts({ products: updatedProducts });
-
-    dispatch(addToCart(selectedProduct));
-
-    alert("Product added to cart!");
-
-    await fetch("https://organic-e-commerce.onrender.com/update-stock", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ productId: selectedProduct._id, quantity: 1 }), // ✅ fixed
-    });
-  } else {
-    alert("Out of stock!");
-  }
-};
-
+      await fetch("https://organic-e-commerce.onrender.com/update-stock", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ productId: selectedProduct._id, quantity: 1 }),
+      });
+    } else {
+      alert("Out of stock!");
+    }
+  };
 
   let productList = products.products || [];
 
@@ -87,8 +57,7 @@ const handleAddToCart = async (productIndex) => {
               <h3>{product.name}</h3>
               <p className="price">₹{product.price}</p>
               <p className="stock">In Stock: {product.productCount}</p>
-<button onClick={() => handleAddToCart(index)} className="add-to-cart-btn">
-
+              <button onClick={() => handleAddToCart(index)} className="add-to-cart-btn">
                 Add to Cart
               </button>
             </div>
