@@ -14,6 +14,7 @@ export default function Login() {
     e.preventDefault(); // Prevent default form submission
 
     setError(""); // Clear any previous errors
+console.log("Logging in with:", { email, password });
 
     try {
       const res = await fetch("https://organic-e-commerce.onrender.com/login", {
@@ -21,7 +22,7 @@ export default function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email:email, password:password }),
       });
 
       const data = await res.json();
@@ -35,7 +36,7 @@ export default function Login() {
         if (data.isAdmin) {
           navigate("/admin"); // Admin dashboard URL
         } else {
-          navigate("/user-dashboard"); // User dashboard URL
+          navigate("/profile"); // User dashboard URL
         }
       } else {
         setError(data.message || "Login failed");

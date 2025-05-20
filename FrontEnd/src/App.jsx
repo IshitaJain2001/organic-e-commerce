@@ -12,6 +12,7 @@ import "./App.css"
 
 import Register from './Components/Register';
 import Cart from './Components/Cart';
+import Profile from './Components/Profile';
 
 
 function App() {
@@ -30,12 +31,10 @@ function App() {
       <Route path='/cart' element={<Cart/>}/>
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>
+      <Route path="/profile" element={<Profile/>}/>
      </Routes>
 
-      {/* Featured Products */}
-     {/* <Products/> */}
-
-      {/* Footer */}
+   
       <Footer/>
     </div>
   );
