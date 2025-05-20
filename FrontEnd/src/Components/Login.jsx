@@ -17,7 +17,7 @@ export default function Login() {
 console.log("Logging in with:", { email, password });
 
     try {
-      const res = await fetch("https://organic-e-commerce.onrender.com/login", {
+      const res = await fetch("http://localhost:3000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

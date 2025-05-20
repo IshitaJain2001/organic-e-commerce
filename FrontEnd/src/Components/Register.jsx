@@ -28,9 +28,10 @@ const Register = () => {
     if (!validateForm()) return toast.error("Please fix form errors");
 
     const body = { ...userDetails };
+console.log(body);
 
     try {
-      const res = await fetch("http://localhost:3000/register", {
+      const res = await fetch("https://organic-e-commerce.onrender.com/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -45,6 +46,7 @@ const Register = () => {
       }
     } catch (err) {
       console.error(err);
+      alert("error")
       toast.error("Something went wrong");
     }
   };

@@ -25,6 +25,7 @@ app.use(
 );
 
 // DB Connection
+mongoose.set('strictQuery', true);
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
@@ -174,21 +175,26 @@ app.put("/update-product/:id", verifyToken, isAdmin, async (req, res) => {
   }
 });
 // Register User with Email and Password
-app.post("/register", async (req, res) => {
-  const { name, email, password, phoneNumber } = req.body;
+app.post('/register', async (req, res) => {
+  console.log(req.body);
+  
+  const { name, email, password} = req.body;
 
   try {
     // Check if the user already exists
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: "User already exists" });
+    if (existingUser) {
+      console.log("user ecists");
+      
+      return res.status(400).json({ message: "User already exists" });}
 
     // Hash the password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user
-    const newUser = new User({ name, email, password: hashedPassword, phoneNumber });
+    const newUser = new User({ name, email, password: hashedPassword });
     await newUser.save();
-
+console.log("User registered successfully:", email);
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     res.status(500).json({ message: "User registration failed" });
