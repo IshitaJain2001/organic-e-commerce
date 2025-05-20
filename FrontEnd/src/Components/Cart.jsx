@@ -1,101 +1,236 @@
-import React, { useState, useEffect } from "react";
 
-export default function Cart() {
+// import React, { useEffect, useState } from "react";
+
+// const Cart = () => {
+//   const [cartItems, setCartItems] = useState([]);
+//   const [loading, setLoading] = useState(false);
+
+//   const fetchCart = async () => {
+//     setLoading(true);
+//     try {
+//       const res = await fetch("http://localhost:3000/cart",{
+//          credentials: "include", 
+//       });
+//       const data = await res.json();
+//       setCartItems(data.cart.items || []);
+//     } catch (err) {
+//       console.error("Error fetching cart:", err);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchCart();
+//   }, []);
+
+//   const removeFromCart = async (productId) => {
+//     try {
+//       await fetch(`http://localhost:3000/remove-from-cart/${productId}`, {
+//         method: "DELETE",
+//       });
+//       fetchCart();
+//     } catch (err) {
+//       console.error("Error removing item:", err);
+//     }
+//   };
+
+//   const updateQuantity = async (productId, quantity) => {
+//     try {
+//       await fetch(`http://localhost:3000/update-cart/${productId}`, {
+//         method: "PUT",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({ quantity }),
+//       });
+//       fetchCart();
+//     } catch (err) {
+//       console.error("Error updating quantity:", err);
+//     }
+//   };
+
+//   const totalPrice = cartItems.reduce(
+//     (acc, item) => acc + item.productId.price * item.quantity,
+//     0
+//   );
+
+//   return (
+//     <div style={{marginTop:"100px"}}>
+//       <h2 className="text-2xl font-bold mb-6 text-center">Your Cart</h2>
+//       {loading ? (
+//         <p className="text-center">Loading...</p>
+//       ) : cartItems.length === 0 ? (
+//         <p className="text-center">Cart is empty</p>
+//       ) : (
+//         <div className="space-y-4">
+//           {cartItems.map((item) => (
+//             <div
+//               key={item.productId._id}
+//               className="flex justify-between items-center border p-4 rounded shadow"
+//             >
+//               <div>
+//                 <h3 className="font-semibold text-lg">{item.productId.name}</h3>
+//                 <p>Price: ₹{item.productId.price}</p>
+//               </div>
+//               <div className="flex items-center space-x-2">
+//                 <button
+//                   onClick={() =>
+//                     updateQuantity(
+//                       item.productId._id,
+//                       item.quantity > 1 ? item.quantity - 1 : 1
+//                     )
+//                   }
+//                   className="bg-gray-200 px-2 rounded"
+//                 >
+//                   -
+//                 </button>
+//                 <span>{item.quantity}</span>
+//                 <button
+//                   onClick={() =>
+//                     updateQuantity(item.productId._id, item.quantity + 1)
+//                   }
+//                   className="bg-gray-200 px-2 rounded"
+//                 >
+//                   +
+//                 </button>
+//                 <button
+//                   onClick={() => removeFromCart(item.productId._id)}
+//                   className="ml-4 bg-red-500 text-white px-3 py-1 rounded"
+//                 >
+//                   Remove
+//                 </button>
+//               </div>
+//             </div>
+//           ))}
+//           <div className="text-right font-semibold text-xl">
+//             Total: ₹{totalPrice}
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default Cart;
+
+
+
+import React, { useEffect, useState } from "react";
+
+const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const fetchCart = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("http://localhost:3000/cart", {
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Cart fetch failed");
+      const data = await res.json();
+      setCartItems(data.cart.items || []);
+    } catch (err) {
+      console.error("Error fetching cart:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchCartItems = async () => {
-      try {
-        const response = await fetch("https://organic-e-commerce.onrender.com/cart");
-        if (!response.ok) {
-          throw new Error("Failed to fetch cart items.");
-        }
-        const data = await response.json();
-        console.log("Fetched cart items:", data);
-
-        const items = data.cart?.items || [];
-        setCartItems(Array.isArray(items) ? items : []);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching cart:", error);
-        setIsLoading(false);
-        setCartItems([]);
-      }
-    };
-
-    fetchCartItems();
+    fetchCart();
   }, []);
 
-  const handleRemoveFromCart = async (productId) => {
+  const removeFromCart = async (productId) => {
     try {
-      const response = await fetch(`https://organic-e-commerce.onrender.com/remove-from-cart/${productId}`, {
+      await fetch(`http://localhost:3000/cart/remove/${productId}`, {
         method: "DELETE",
+        credentials: "include",
       });
-      if (!response.ok) {
-        throw new Error("Failed to remove item from cart.");
-      }
-      const data = await response.json();
-      console.log("Updated cart after removing item:", data);
-      setCartItems(data.cart?.items || []);
-    } catch (error) {
-      console.error("Error removing item from cart:", error);
+      fetchCart();
+    } catch (err) {
+      console.error("Error removing item:", err);
     }
   };
 
-  const handleUpdateQuantity = async (productId, quantity) => {
+  const updateQuantity = async (productId, quantity) => {
     try {
-      const response = await fetch(
-        `https://organic-e-commerce.onrender.com/update-cart/${productId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ quantity }),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to update cart quantity.");
-      }
-      const data = await response.json();
-      console.log("Updated cart after quantity change:", data);
-      setCartItems(data.cart?.items || []);
-    } catch (error) {
-      console.error("Error updating cart quantity:", error);
+      await fetch(`http://localhost:3000/cart/update/${productId}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ quantity }),
+      });
+      fetchCart();
+    } catch (err) {
+      console.error("Error updating quantity:", err);
     }
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const totalPrice = cartItems.reduce(
+    (acc, item) => acc + (item.productId?.price || 0) * item.quantity,
+    0
+  );
 
   return (
-    <section className="cart-section" style={{ marginTop: "100px" }}>
-      <h2>Your Cart</h2>
-      {cartItems.length === 0 ? (
-        <p>Nothing in Cart</p>
+    <div style={{ marginTop: "100px" }}>
+      <h2 className="text-2xl font-bold mb-6 text-center">Your Cart</h2>
+      {loading ? (
+        <p className="text-center">Loading...</p>
+      ) : cartItems.length === 0 ? (
+        <p className="text-center">Cart is empty</p>
       ) : (
-        <div>
+        <div className="space-y-4">
           {cartItems.map((item) => (
-            <div key={item.productId._id}>
-              <h3>{item.productId?.name}</h3>
-              <p>Price: ₹{item.productId?.price}</p>
-              <p>Quantity: {item.quantity}</p>
-              <button onClick={() => handleRemoveFromCart(item.productId._id)}>
-                Remove
-              </button>
-              <button
-                onClick={() =>
-                  handleUpdateQuantity(item.productId._id, item.quantity + 1)
-                }
-              >
-                Increase Quantity
-              </button>
+            <div
+              key={item.productId._id}
+              className="flex justify-between items-center border p-4 rounded shadow"
+            >
+              <div>
+                <h3 className="font-semibold text-lg">{item.productId.name}</h3>
+                <p>Price: ₹{item.productId.price}</p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() =>
+                    updateQuantity(
+                      item.productId._id,
+                      item.quantity > 1 ? item.quantity - 1 : 1
+                    )
+                  }
+                  className="bg-gray-200 px-2 rounded"
+                >
+                  -
+                </button>
+                <span>{item.quantity}</span>
+                <button
+                  onClick={() =>
+                    updateQuantity(item.productId._id, item.quantity + 1)
+                  }
+                  className="bg-gray-200 px-2 rounded"
+                >
+                  +
+                </button>
+                <button
+                  onClick={() => removeFromCart(item.productId._id)}
+                  className="ml-4 bg-red-500 text-white px-3 py-1 rounded"
+                >
+                  Remove
+                </button>
+              </div>
             </div>
           ))}
+          <div className="text-right font-semibold text-xl">
+            Total: ₹{totalPrice}
+          </div>
         </div>
       )}
-    </section>
+    </div>
   );
-}
+};
+
+export default Cart;
+
