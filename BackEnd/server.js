@@ -94,25 +94,18 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// app.post("/login", async (req, res) => {
-//   const { email, password } = req.body;
-//   try {
-//     const user = await User.findOne({ email });
-//     if (!user) return res.status(400).json({ message: "Invalid credentials" });
+const verifyToken = (req, res, next) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(403).json({ message: "Token required" });
 
-//     const isMatch = await bcrypt.compare(password, user.password);
-//     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
-
-//     req.session.user = {
-//       id: user._id,
-//       isAdmin: user.isAdmin
-//     };
-
-//     res.json({ message: "Login successful", user: { id: user._id, isAdmin: user.isAdmin } });
-//   } catch (err) {
-//     res.status(500).json({ message: "Login failed", error: err.message });
-//   }
-// });
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
 
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
