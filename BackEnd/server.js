@@ -165,6 +165,37 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.put("/update-product/:id", verifyToken, isAdmin, async (req, res) => {
+  const { id } = req.params;
+  const { name, price, productCount } = req.body;
+  try {
+    const updated = await Product.findByIdAndUpdate(id, { name, price, productCount }, { new: true });
+    if (!updated) return res.status(404).json({ message: "Product not found" });
+    res.json({ message: "Product updated", product: updated });
+  } catch (err) {
+    res.status(500).json({ error: "Update error" });
+  }
+});
+
+app.post("/add-products", verifyToken, isAdmin, async (req, res) => {
+  const { name, price, productCount } = req.body;
+  if (!name || price == null || productCount == null) {
+    return res.status(400).send("Enter all required details");
+  }
+  try {
+    const product = new Product({ name, price, productCount });
+    await product.save();
+    res.json(product);
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+});
+
+app.delete("/delete-product/:id", verifyToken, isAdmin, async (req, res) => {
+  await Product.findByIdAndDelete(req.params.id);
+  res.send("Product deleted");
+});
+
 app.post("/logout", (req, res) => {
   req.session.destroy(() => {
     res.clearCookie("connect.sid");
