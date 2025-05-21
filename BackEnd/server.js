@@ -94,9 +94,51 @@ app.post("/register", async (req, res) => {
   }
 });
 
+// app.post("/login", async (req, res) => {
+//   const { email, password } = req.body;
+//   try {
+//     const user = await User.findOne({ email });
+//     if (!user) return res.status(400).json({ message: "Invalid credentials" });
+
+//     const isMatch = await bcrypt.compare(password, user.password);
+//     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+
+//     req.session.user = {
+//       id: user._id,
+//       isAdmin: user.isAdmin
+//     };
+
+//     res.json({ message: "Login successful", user: { id: user._id, isAdmin: user.isAdmin } });
+//   } catch (err) {
+//     res.status(500).json({ message: "Login failed", error: err.message });
+//   }
+// });
+
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
+
   try {
+    // Check against .env admin credentials
+    if (
+      email === process.env.SUPER_ADMIN_EMAILL &&
+      password === process.env.SUPER_ADMIN_PASSWORD
+    ) {
+      req.session.user = {
+        id: "admin-env", // dummy id
+        isAdmin: true
+      };
+
+      return res.json({
+        message: "Admin login successful",
+        user: {
+          id: "admin-env",
+          isAdmin: true
+        },
+        redirectTo: "/admin"
+      });
+    }
+
+    // Normal DB-based login
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
@@ -108,7 +150,16 @@ app.post("/login", async (req, res) => {
       isAdmin: user.isAdmin
     };
 
-    res.json({ message: "Login successful", user: { id: user._id, isAdmin: user.isAdmin } });
+    const redirectTo = user.isAdmin ? "/admin" : "/dashboard";
+
+    res.json({
+      message: "Login successful",
+      user: {
+        id: user._id,
+        isAdmin: user.isAdmin
+      },
+      redirectTo
+    });
   } catch (err) {
     res.status(500).json({ message: "Login failed", error: err.message });
   }
