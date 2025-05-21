@@ -30,14 +30,11 @@ console.log("Logging in with:", { email, password });
       if (res.ok) {
         // Store the token and isAdmin flag in localStorage
         localStorage.setItem("token", data.token);
-        localStorage.setItem("isAdmin", data.isAdmin);
-
+        localStorage.setItem("isAdmin", data.user?.isAdmin);
+  const redirectPath = data.redirectTo || "/profile";
+  navigate(redirectPath);
         // Redirect based on isAdmin
-        if (data.isAdmin) {
-          navigate("/admin"); // Admin dashboard URL
-        } else {
-          navigate("/profile"); // User dashboard URL
-        }
+       
       } else {
         setError(data.message || "Login failed");
       }
