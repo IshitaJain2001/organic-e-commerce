@@ -13,7 +13,8 @@
     "express": "^5.1.0",
     "express-session": "^1.18.1",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.15.0"
+    "mongoose": "^8.15.0",
+    "session": "^0.1.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
