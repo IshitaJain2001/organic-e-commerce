@@ -18,7 +18,7 @@ import AdminDashboard from './admin/AdminDashboard';
 
 
 function App() {
-  console.log(AdminProducts);
+
   return (
     <div className="App">
       {/* Navbar */}
