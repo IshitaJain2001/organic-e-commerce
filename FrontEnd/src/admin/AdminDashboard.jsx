@@ -1,75 +1,180 @@
-import React, { useState, useEffect } from 'react';
 
-function AdminPanel() {
-  const [products, setProducts] = useState([]);
-  const [newProduct, setNewProduct] = useState({ name: '', price: '' });
 
-  // Fetch all products on load
+import { useEffect, useState } from "react";
+import "./adminDashboard.css";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../cartActions"; // Adjust this path as per your folder structure
+
+export default function AdminDashboard() {
+  const [products, setProducts] = useState({
+    name: "",
+    price: "",
+    productCount: ""
+  });
+
+  const [productList, setProductList] = useState([]);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     fetchProducts();
   }, []);
 
   const fetchProducts = async () => {
-    const res = await fetch('/api/products');  // Your API route here
-    const data = await res.json();
-    setProducts(data);
+    try {
+      const res = await fetch("https://organic-e-commerce.onrender.com/check-products");
+      const data = await res.json();
+      setProductList(data.products);
+    } catch (err) {
+      console.error("Error fetching products:", err);
+    }
   };
 
-  // Add product
-  const addProduct = async () => {
-    await fetch('/api/add-products', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newProduct),
-    });
-    setNewProduct({ name: '', price: '' });
-    fetchProducts();  // refresh product list
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProducts((prev) => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  // Delete product by id
-  const deleteProduct = async (id) => {
-    await fetch(`/api/delete-product/${id}`, {
-      method: 'DELETE',
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const url = isEditMode
+      ? `https://organic-e-commerce.onrender.com/update-product/${editId}`
+      : "https://organic-e-commerce.onrender.com/add-products";
+
+    const method = isEditMode ? "PUT" : "POST";
+    const token = localStorage.getItem("token");
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(products)
+      });
+
+      const result = await res.json();
+
+      if (!isEditMode) {
+        dispatch(addToCart(result.product || products)); // Optional Redux cart update
+      }
+
+      alert(isEditMode ? "Product updated successfully" : "Product added successfully");
+
+      setProducts({ name: "", price: "", productCount: "" });
+      setIsEditMode(false);
+      setEditId(null);
+      fetchProducts();
+    } catch (err) {
+      console.error("Error submitting product:", err);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await fetch(`https://organic-e-commerce.onrender.com/delete-product/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+      alert("Product deleted successfully");
+      fetchProducts();
+    } catch (err) {
+      console.error("Error deleting product:", err);
+    }
+  };
+
+  const handleEdit = (product) => {
+    setIsEditMode(true);
+    setEditId(product._id);
+    setProducts({
+      name: product.name,
+      price: product.price,
+      productCount: product.productCount
     });
-    fetchProducts();  // refresh product list
   };
 
   return (
-    <div>
-      <h2>Admin Panel - Products</h2>
-
-      <div>
+    <div className="admin-form-container">
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="name">Product Name</label>
         <input
-          placeholder="Product Name"
-          value={newProduct.name}
-          onChange={e => setNewProduct({ ...newProduct, name: e.target.value })}
+          type="text"
+          id="name"
+          name="name"
+          value={products.name}
+          onChange={handleChange}
+          required
         />
-        <input
-          placeholder="Price"
-          value={newProduct.price}
-          onChange={e => setNewProduct({ ...newProduct, price: e.target.value })}
-        />
-        <button onClick={addProduct}>Add Product</button>
-      </div>
 
-      <table border="1" style={{ marginTop: '20px', width: '100%' }}>
+        <label htmlFor="price">Product Price</label>
+        <input
+          type="text"
+          id="price"
+          name="price"
+          value={products.price}
+          onChange={handleChange}
+          required
+        />
+
+        <label htmlFor="productCount">Product Count</label>
+        <input
+          type="number"
+          id="productCount"
+          name="productCount"
+          value={products.productCount}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          type="submit"
+          value={isEditMode ? "Update Product" : "Add Product"}
+        />
+      </form>
+
+      <h2>All Products</h2>
+      <table className="product-table">
         <thead>
-          <tr><th>Name</th><th>Price</th><th>Action</th></tr>
+          <tr>
+            <th>S.No.</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Count</th>
+            <th>Actions</th>
+          </tr>
         </thead>
         <tbody>
-          {products.map(p => (
-            <tr key={p._id}>
-              <td>{p.name}</td>
-              <td>{p.price}</td>
-              <td>
-                <button onClick={() => deleteProduct(p._id)}>Delete</button>
-              </td>
+          {productList.length > 0 ? (
+            productList.map((product, index) => (
+              <tr key={product._id || index}>
+                <td>{index + 1}</td>
+                <td>{product.name}</td>
+                <td>₹{product.price}</td>
+                <td>{product.productCount}</td>
+                <td>
+                  <button className="edit-btn" onClick={() => handleEdit(product)}>
+                    Edit
+                  </button>
+                  <button className="delete-btn" onClick={() => handleDelete(product._id)}>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5">No products found.</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
   );
 }
-
-export default AdminPanel;

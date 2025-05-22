@@ -209,7 +209,7 @@ app.get("/products", async (req, res) => {
 // Rename product routes to match /api/products and so on
 
 // Get all products
-app.get("/api/products", async (req, res) => {
+app.get("/check-products", async (req, res) => {
   try {
     const products = await Product.find();
     res.json({ products });
@@ -219,7 +219,7 @@ app.get("/api/products", async (req, res) => {
 });
 
 // Add product (admin only)
-app.post("/api/products", verifySession, isAdmin, async (req, res) => {
+app.post("/add-products", verifySession, isAdmin, async (req, res) => {
   const { name, price, productCount } = req.body;
   try {
     const product = new Product({ name, price, productCount });
@@ -231,7 +231,7 @@ app.post("/api/products", verifySession, isAdmin, async (req, res) => {
 });
 
 // Update product
-app.put("/api/products/:id", verifySession, isAdmin, async (req, res) => {
+app.put("/update-products/:id", verifySession, isAdmin, async (req, res) => {
   const { id } = req.params;
   const { name, price, productCount } = req.body;
 
@@ -253,7 +253,7 @@ app.put("/api/products/:id", verifySession, isAdmin, async (req, res) => {
 });
 
 // Delete product
-app.delete("/api/products/:id", verifySession, isAdmin, async (req, res) => {
+app.delete("/delete-product/:id", verifySession, isAdmin, async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
     res.json({ message: "Product deleted" });
