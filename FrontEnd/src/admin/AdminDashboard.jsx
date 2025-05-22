@@ -94,7 +94,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="admin-dashboard">
+    <div className="admin-form-container">
       <h2>Admin Dashboard</h2>
       <input
         type="text"
