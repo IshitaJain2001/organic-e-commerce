@@ -433,7 +433,7 @@ app.get("/products", async (req, res) => {
   }
 });
 
-app.post("/products", verifySession, isAdmin, async (req, res) => {
+app.post("/add-products", verifySession, isAdmin, async (req, res) => {
   const { name, price, productCount } = req.body;
   try {
     const product = new Product({ name, price, productCount });
