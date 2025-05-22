@@ -163,17 +163,39 @@ app.post("/add-products", verifySession, isAdmin, async (req, res) => {
   }
 });
 
+// app.put("/update-product/:id", verifySession, isAdmin, async (req, res) => {
+//   const { id } = req.params;
+//   const { name, price, productCount } = req.body;
+//   try {
+//     const updated = await Product.findByIdAndUpdate(id, { name, price, productCount }, { new: true });
+//     if (!updated) return res.status(404).json({ message: "Product not found" });
+//     res.json({ message: "Product updated", product: updated });
+//   } catch (err) {
+//     res.status(500).json({ error: "Update error" });
+//   }
+// });
+
 app.put("/update-product/:id", verifySession, isAdmin, async (req, res) => {
   const { id } = req.params;
   const { name, price, productCount } = req.body;
+
   try {
-    const updated = await Product.findByIdAndUpdate(id, { name, price, productCount }, { new: true });
-    if (!updated) return res.status(404).json({ message: "Product not found" });
-    res.json({ message: "Product updated", product: updated });
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      { name, price, productCount },
+      { new: true } // This makes it return the updated document
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.json({ message: "Product updated successfully", product: updatedProduct });
   } catch (err) {
-    res.status(500).json({ error: "Update error" });
+    res.status(500).json({ message: "Failed to update product", error: err.message });
   }
 });
+
 
 app.delete("/delete-product/:id", verifySession, isAdmin, async (req, res) => {
   try {
