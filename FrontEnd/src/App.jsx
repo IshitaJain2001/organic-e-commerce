@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Navbar from './Components/Navbar';
-import AdminProducts from './admin/AdminDashboard';
+
 import Products from './Components/Products';
 import Footer from './Components/Footer';
 import { Route, Routes } from 'react-router-dom';
@@ -13,6 +13,7 @@ import "./App.css"
 import Register from './Components/Register';
 import Cart from './Components/Cart';
 import Profile from './Components/Profile';
+import AdminPanel from './admin/AdminDashboard';
 
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
       <Route path='/home' element={<Home/>}/>
       <Route path='/contact' element={<Contact/>}/>
       <Route path='/shop' element={<Products/>}/>
-      <Route path='/admin' element={<AdminProducts/>}/>
+      <Route path='/admin' element={<AdminPanel/>}/>
       <Route path='/cart' element={<Cart/>}/>
       <Route path='/login' element={<Login/>}/>
       <Route path='/register' element={<Register/>}/>

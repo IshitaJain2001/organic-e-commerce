@@ -152,16 +152,16 @@ app.get("/products", async (req, res) => {
   }
 });
 
-app.post("/add-products", verifySession, isAdmin, async (req, res) => {
-  const { name, price, productCount } = req.body;
-  try {
-    const product = new Product({ name, price, productCount });
-    await product.save();
-    res.json({ message: "Product added", product });
-  } catch (err) {
-    res.status(500).json({ message: "Failed to add product", error: err.message });
-  }
-});
+// app.post("/add-products", verifySession, isAdmin, async (req, res) => {
+//   const { name, price, productCount } = req.body;
+//   try {
+//     const product = new Product({ name, price, productCount });
+//     await product.save();
+//     res.json({ message: "Product added", product });
+//   } catch (err) {
+//     res.status(500).json({ message: "Failed to add product", error: err.message });
+//   }
+// });
 
 // app.put("/update-product/:id", verifySession, isAdmin, async (req, res) => {
 //   const { id } = req.params;
@@ -175,7 +175,63 @@ app.post("/add-products", verifySession, isAdmin, async (req, res) => {
 //   }
 // });
 
-app.put("/update-product/:id", verifySession, isAdmin, async (req, res) => {
+// app.put("/update-product/:id", verifySession, isAdmin, async (req, res) => {
+//   const { id } = req.params;
+//   const { name, price, productCount } = req.body;
+
+//   try {
+//     const updatedProduct = await Product.findByIdAndUpdate(
+//       id,
+//       { name, price, productCount },
+//       { new: true } // This makes it return the updated document
+//     );
+
+//     if (!updatedProduct) {
+//       return res.status(404).json({ message: "Product not found" });
+//     }
+
+//     res.json({ message: "Product updated successfully", product: updatedProduct });
+//   } catch (err) {
+//     res.status(500).json({ message: "Failed to update product", error: err.message });
+//   }
+// });
+
+
+// app.delete("/delete-product/:id", verifySession, isAdmin, async (req, res) => {
+//   try {
+//     await Product.findByIdAndDelete(req.params.id);
+//     res.send("Product deleted");
+//   } catch (err) {
+//     res.status(500).json({ message: "Delete error", error: err.message });
+//   }
+// });
+
+// Rename product routes to match /api/products and so on
+
+// Get all products
+app.get("/api/products", async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.json({ products });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching products" });
+  }
+});
+
+// Add product (admin only)
+app.post("/api/products", verifySession, isAdmin, async (req, res) => {
+  const { name, price, productCount } = req.body;
+  try {
+    const product = new Product({ name, price, productCount });
+    await product.save();
+    res.json({ message: "Product added", product });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to add product", error: err.message });
+  }
+});
+
+// Update product
+app.put("/api/products/:id", verifySession, isAdmin, async (req, res) => {
   const { id } = req.params;
   const { name, price, productCount } = req.body;
 
@@ -183,7 +239,7 @@ app.put("/update-product/:id", verifySession, isAdmin, async (req, res) => {
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
       { name, price, productCount },
-      { new: true } // This makes it return the updated document
+      { new: true }
     );
 
     if (!updatedProduct) {
@@ -196,15 +252,16 @@ app.put("/update-product/:id", verifySession, isAdmin, async (req, res) => {
   }
 });
 
-
-app.delete("/delete-product/:id", verifySession, isAdmin, async (req, res) => {
+// Delete product
+app.delete("/api/products/:id", verifySession, isAdmin, async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
-    res.send("Product deleted");
+    res.json({ message: "Product deleted" });
   } catch (err) {
     res.status(500).json({ message: "Delete error", error: err.message });
   }
 });
+
 
 // Cart Routes
 app.post("/cart", verifySession, async (req, res) => {
