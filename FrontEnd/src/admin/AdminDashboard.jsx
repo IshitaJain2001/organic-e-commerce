@@ -1,9 +1,5 @@
-
-
 import { useEffect, useState } from "react";
 import "./adminDashboard.css";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../cartActions"; // Adjust this path as per your folder structure
 
 export default function AdminDashboard() {
   const [products, setProducts] = useState({
@@ -15,7 +11,6 @@ export default function AdminDashboard() {
   const [productList, setProductList] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     fetchProducts();
@@ -59,10 +54,6 @@ export default function AdminDashboard() {
       });
 
       const result = await res.json();
-
-      if (!isEditMode) {
-        dispatch(addToCart(result.product || products)); // Optional Redux cart update
-      }
 
       alert(isEditMode ? "Product updated successfully" : "Product added successfully");
 
@@ -178,3 +169,4 @@ export default function AdminDashboard() {
     </div>
   );
 }
+  
