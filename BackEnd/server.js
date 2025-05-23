@@ -153,7 +153,7 @@ app.get("/check-products", async (req, res) => {
 });
 
 // Add product (admin only)
-app.post("/add-products",  isAdmin, async (req, res) => {
+app.post("/add-products",   async (req, res) => {
   const { name, price, productCount } = req.body;
   try {
     const product = new Product({ name, price, productCount });
