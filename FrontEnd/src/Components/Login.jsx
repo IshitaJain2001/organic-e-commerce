@@ -33,6 +33,8 @@ console.log("Logging in with:", { email, password });
         localStorage.setItem("isAdmin", data.user?.isAdmin);
   const redirectPath = data.redirectTo || "/profile";
   navigate(redirectPath);
+  console.log(redirectPath);
+  
         // Redirect based on isAdmin
        
       } else {
