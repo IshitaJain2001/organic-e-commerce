@@ -165,7 +165,7 @@ app.post("/add-products",   async (req, res) => {
 });
 
 // Update product
-app.put("/update-products/:id", isAdmin, async (req, res) => {
+app.put("/update-products/:id",  async (req, res) => {
   const { id } = req.params;
   const { name, price, productCount } = req.body;
 
@@ -187,7 +187,7 @@ app.put("/update-products/:id", isAdmin, async (req, res) => {
 });
 
 // Delete product
-app.delete("/delete-product/:id",  isAdmin, async (req, res) => {
+app.delete("/delete-product/:id",   async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
     res.json({ message: "Product deleted" });
