@@ -220,8 +220,8 @@ export default function AdminDashboard() {
       const res = await fetch(url, {
         method,
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          "Content-Type": "application/json"
+         
         },
           credentials: "include",
         body: JSON.stringify(products)
