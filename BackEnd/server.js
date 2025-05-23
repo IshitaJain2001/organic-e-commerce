@@ -23,7 +23,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === "production", // ✅ Important for dev/prod
+    secure: false, // ✅ Important for dev/prod
     httpOnly: true,
     sameSite: 'lax'
   }
@@ -142,73 +142,7 @@ app.post("/logout", (req, res) => {
   });
 });
 
-// Product Routes
-app.get("/products", async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.json({ products });
-  } catch (err) {
-    res.status(500).json({ message: "Error fetching products" });
-  }
-});
 
-// app.post("/add-products", verifySession, isAdmin, async (req, res) => {
-//   const { name, price, productCount } = req.body;
-//   try {
-//     const product = new Product({ name, price, productCount });
-//     await product.save();
-//     res.json({ message: "Product added", product });
-//   } catch (err) {
-//     res.status(500).json({ message: "Failed to add product", error: err.message });
-//   }
-// });
-
-// app.put("/update-product/:id", verifySession, isAdmin, async (req, res) => {
-//   const { id } = req.params;
-//   const { name, price, productCount } = req.body;
-//   try {
-//     const updated = await Product.findByIdAndUpdate(id, { name, price, productCount }, { new: true });
-//     if (!updated) return res.status(404).json({ message: "Product not found" });
-//     res.json({ message: "Product updated", product: updated });
-//   } catch (err) {
-//     res.status(500).json({ error: "Update error" });
-//   }
-// });
-
-// app.put("/update-product/:id", verifySession, isAdmin, async (req, res) => {
-//   const { id } = req.params;
-//   const { name, price, productCount } = req.body;
-
-//   try {
-//     const updatedProduct = await Product.findByIdAndUpdate(
-//       id,
-//       { name, price, productCount },
-//       { new: true } // This makes it return the updated document
-//     );
-
-//     if (!updatedProduct) {
-//       return res.status(404).json({ message: "Product not found" });
-//     }
-
-//     res.json({ message: "Product updated successfully", product: updatedProduct });
-//   } catch (err) {
-//     res.status(500).json({ message: "Failed to update product", error: err.message });
-//   }
-// });
-
-
-// app.delete("/delete-product/:id", verifySession, isAdmin, async (req, res) => {
-//   try {
-//     await Product.findByIdAndDelete(req.params.id);
-//     res.send("Product deleted");
-//   } catch (err) {
-//     res.status(500).json({ message: "Delete error", error: err.message });
-//   }
-// });
-
-// Rename product routes to match /api/products and so on
-
-// Get all products
 app.get("/check-products", async (req, res) => {
   try {
     const products = await Product.find();
