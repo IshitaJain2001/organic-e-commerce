@@ -82,3 +82,11 @@
     font-weight: 500;
   }
   
+  .password-field input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.password-field span {
+  user-select: none;
+}
