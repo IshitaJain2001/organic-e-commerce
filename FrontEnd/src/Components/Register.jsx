@@ -53,7 +53,7 @@ const Register = () => {
       const data = await res.json();
        if (!res.ok) {
       // 🔴 Alert if user already exists or other error
-      alert(res.message || "Registration failed");
+      alert(res.error || "Registration failed");
       return;
     }
       if (res.ok) {
