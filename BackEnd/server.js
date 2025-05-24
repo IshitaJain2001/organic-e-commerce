@@ -23,7 +23,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false, // ✅ Important for dev/prod
+    secure: false, 
     httpOnly: true,
     sameSite: 'lax'
   }
