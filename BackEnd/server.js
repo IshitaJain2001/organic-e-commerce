@@ -132,6 +132,7 @@ app.post("/login", async (req, res) => {
     const redirectTo = user.isAdmin ? "/admin" : "/profile";
     res.json({ message: "Login successful", user: {
   id: user._id,
+  name:user.name,
         email: user.email,
         phone: user.phone,
         address: user.address,
