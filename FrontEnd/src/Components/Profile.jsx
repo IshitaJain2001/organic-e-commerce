@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import "./ProfileCard.css"
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [cart, setCart] = useState([]);
