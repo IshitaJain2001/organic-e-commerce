@@ -130,7 +130,13 @@ app.post("/login", async (req, res) => {
     };
 
     const redirectTo = user.isAdmin ? "/admin" : "/profile";
-    res.json({ message: "Login successful", user: req.session.user, redirectTo });
+    res.json({ message: "Login successful", user: {
+  _id: user._id,
+        email: user.email,
+        phone: user.phone,
+        address: user.address,
+        isAdmin: user.isAdmin,
+    } ,redirectTo });
   } catch (err) {
     res.status(500).json({ message: "Login failed", error: err.message });
   }
