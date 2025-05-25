@@ -28,6 +28,7 @@ export default function Login() {
       const data = await res.json();
 
       if (res.ok) {
+         localStorage.setItem("user", JSON.stringify(data.user));
         localStorage.setItem("token", data.token);
         localStorage.setItem("isAdmin", data.user?.isAdmin);
         const redirectPath = data.redirectTo || "/profile";
