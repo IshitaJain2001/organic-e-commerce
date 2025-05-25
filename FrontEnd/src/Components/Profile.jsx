@@ -37,15 +37,14 @@ const ProfilePage = () => {
       </div>
     );
   }
-
   return (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white shadow-xl rounded-2xl">
       <h2 className="text-3xl font-bold text-center text-indigo-700 mb-6">My Profile</h2>
 
       <div className="space-y-4">
-        <p><strong>ID:</strong> {user.id}</p>
-        <p><strong>Phone:</strong> {user.phone || "Not provided"}</p>
-        <p><strong>Address:</strong> {user.address || "Not provided"}</p>
+        <p><strong>ID:</strong> {user?.id}</p>
+        <p><strong>Phone:</strong> {user?.phone || "Not provided"}</p>
+        <p><strong>Address:</strong> {user?.address || "Not provided"}</p>
       </div>
 
       <div className="mt-10">
