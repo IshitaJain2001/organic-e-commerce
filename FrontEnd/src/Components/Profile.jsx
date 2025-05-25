@@ -32,7 +32,7 @@ const ProfilePage = () => {
 
   if (!user) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div style={{marginTop:"100px"}}>
         <p className="text-lg text-gray-600">Please login to view your profile</p>
       </div>
     );
