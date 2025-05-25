@@ -28,9 +28,10 @@ const ProfilePage = () => {
 
   return (
     <div className="profile-container">
-      <h2 className="profile-heading">My Profile</h2>
+      <h2 className="profile-heading">Welcome {user?.name}</h2>
 
       <div className="profile-info">
+                <p><strong>Name:</strong> {user?.name}</p>
         <p><strong>ID:</strong> {user?.id}</p>
         <p><strong>Phone:</strong> {user?.phone || "Not provided"}</p>
         <p><strong>Address:</strong> {user?.address || "Not provided"}</p>
