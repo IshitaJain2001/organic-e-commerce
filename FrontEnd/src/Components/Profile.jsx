@@ -4,31 +4,31 @@ const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [cart, setCart] = useState([]);
   const [orders, setOrders] = useState([]);
-
-  // Fetch user from localStorage
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = localStorage.getItem("userId");
+    console.log("Logged in user:", storedUser);
+
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
   }, []);
 
-  // Fetch cart and orders
-  useEffect(() => {
-    if (user?.id) {
-      // ✅ Cart
-      fetch(`https://organic-e-commerce.onrender.com/cart/${user.id}`)
-        .then((res) => res.json())
-        .then((data) => setCart(data.cart || []))
-        .catch((err) => console.error("Cart fetch error:", err));
+  
+//   useEffect(() => {
+//     if (user?.id) {
+//       // ✅ Cart
+//       fetch(`https://organic-e-commerce.onrender.com/cart/${user.id}`)
+//         .then((res) => res.json())
+//         .then((data) => setCart(data.cart || []))
+//         .catch((err) => console.error("Cart fetch error:", err));
 
-      // ✅ Orders
-      fetch(`https://organic-e-commerce.onrender.com/orders/${user.id}`)
-        .then((res) => res.json())
-        .then((data) => setOrders(data.orders || []))
-        .catch((err) => console.error("Orders fetch error:", err));
-    }
-  }, [user]);
+//       ✅ Orders
+//       fetch(`https://organic-e-commerce.onrender.com/orders/${user.id}`)
+//         .then((res) => res.json())
+//         .then((data) => setOrders(data.orders || []))
+//         .catch((err) => console.error("Orders fetch error:", err));
+//     }
+//   }, [user]);
 
   if (!user) {
     return (

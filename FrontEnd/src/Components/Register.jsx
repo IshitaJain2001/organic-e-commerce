@@ -48,6 +48,7 @@ const Register = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
+        credentials: "include"
       });
 
       const data = await res.json();
@@ -59,9 +60,7 @@ const Register = () => {
       if (res.ok) {
         toast.success("Registered successfully!");
         setUserDetails({ name: "", email: "", password: "", address: "", phone: "" });
-      } else {
-        toast.error(data.msg || "Registration failed");
-      }
+      } 
     } catch (err) {
       console.error(err);
       toast.error("Something went wrong");

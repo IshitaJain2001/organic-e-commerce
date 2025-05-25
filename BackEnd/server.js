@@ -41,7 +41,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: String,
   isAdmin: { type: Boolean, default: false },
-  phoneNumber: String,
+  phone: String,
+  address: String 
 });
 const User = mongoose.model("User", userSchema);
 
