@@ -75,6 +75,17 @@ const Register = () => {
 
       if (!res.ok) {
  toast.error(data.message || "Registration failed"); 
+     setUserDetails({
+        name: "",
+        email: "",
+        password: "",
+        phone: "",
+        houseNumber: "",
+        street: "",
+        city: "",
+        state: "",
+        pincode: ""
+      });
         return;
       }
 
