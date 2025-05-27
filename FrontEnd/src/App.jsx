@@ -15,6 +15,7 @@ import Cart from './Components/Cart';
 import Profile from './Components/Profile';
 
 import AdminDashboard from './admin/AdminDashboard';
+import { ToastContainer } from 'react-toastify';
 
 
 function App() {
